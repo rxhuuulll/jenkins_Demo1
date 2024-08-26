@@ -1,0 +1,25 @@
+pipeline {
+    agent { label 'docker-agent' } // Ensure this label matches your agent's label
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/rxhuuulll/jenkins_Demo1.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("rahulmk9/nginx-image:latest")
+                }
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    dockerImage.run('-d -p 80:80')
+                }
+            }
+        }
+    }
+}
