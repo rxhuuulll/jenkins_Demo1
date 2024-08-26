@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USERNAME = credentials('0e18589a-430b-4201-ba1f-b5c7e7562ab3') // Your Docker Hub credentials ID
-        DOCKER_PASSWORD = credentials('0e18589a-430b-4201-ba1f-b5c7e7562ab3') // Your Docker Hub credentials ID
+        DOCKER_USERNAME = credentials('docker-hub-username') // Your Docker Hub credentials ID
+        DOCKER_PASSWORD = credentials('docker-hub-password') // Your Docker Hub credentials ID
     }
 
     stages {
