@@ -1,23 +1,38 @@
 pipeline {
-    agent { label 'docker-agent' } // Ensure this label matches your agent's label
+    agent any
+
+    environment {
+        DOCKER_USERNAME = credentials('docker-hub-username') // Your Docker Hub credentials ID
+        DOCKER_PASSWORD = credentials('docker-hub-password') // Your Docker Hub credentials ID
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/rxhuuulll/jenkins_Demo1.git'
+                git url: 'https://github.com/rxhuuulll/jenkins_Demo1.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("rahulmk9/nginx-image:latest")
+                    sh 'docker build -t rahulmk9/my-nginx-image:latest .'
                 }
             }
         }
-        stage('Run Docker Container') {
+
+        stage('Login to Docker Hub') {
             steps {
                 script {
-                    dockerImage.run('-d -p 80:80')
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                }
+            }
+        }
+
+        stage('Publish Docker Image') {
+            steps {
+                script {
+                    sh 'docker push rahulmk9/my-nginx-image:latest'
                 }
             }
         }
